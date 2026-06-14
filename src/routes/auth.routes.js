@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { login, refresh, logout, me } from "../controllers/auth.controller.js";
+import { login, refresh, logout, updateProfile,me } from "../controllers/auth.controller.js";
 import { validate } from "../middleware/validate.js";
 import { requireAuth } from "../middleware/auth.js";
 import { authLimiter } from "../middleware/rateLimit.js";
@@ -16,5 +16,6 @@ r.post(
 );
 r.post("/refresh", refresh);
 r.post("/logout", logout);
+r.patch("/profile", requireAuth, updateProfile);
 r.get("/me", requireAuth, me);
 export default r;

@@ -29,7 +29,8 @@ export const listBlogs = asyncHandler(async (req, res) => {
 export const getBlogBySlug = asyncHandler(async (req, res) => {
   const blog = await Blog.findOne({ slug: req.params.slug })
     .populate("category", "name slug")
-    .populate("tags", "name slug");
+    .populate("tags", "name slug")
+    .populate("author", "name avatar bio");
   if (!blog) throw ApiError.notFound("Blog not found");
   res.json(blog);
 });

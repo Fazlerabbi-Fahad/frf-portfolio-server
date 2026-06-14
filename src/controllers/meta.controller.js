@@ -6,6 +6,7 @@ import { Testimonial } from "../models/Testimonial.js";
 import { Category } from "../models/Category.js";
 import { Tag } from "../models/Tag.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { User } from "../models/User.js";
 
 export const dashboardStats = asyncHandler(async (_req, res) => {
   const [blogs, albums, photos, published, projects, testimonials] = await Promise.all([
@@ -38,4 +39,12 @@ export const submitContact = asyncHandler(async (req, res) => {
   if (req.body.website) return res.json({ ok: true });
   // in production: send email / store lead. Here we acknowledge.
   res.json({ ok: true, message: "Thanks — I'll be in touch." });
+});
+
+
+
+export const getSiteAuthor = asyncHandler(async (_req, res) => {
+  const user = await User.findOne({ role: "admin" }).select("name avatar bio");
+  if (!user) return res.json(null);
+  res.json({ name: user.name, avatar: user.avatar, bio: user.bio });
 });

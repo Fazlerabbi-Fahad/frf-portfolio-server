@@ -1,5 +1,9 @@
 import { User } from "../models/User.js";
-import { signAccess, signRefresh, verifyRefresh } from "../services/token.service.js";
+import {
+  signAccess,
+  signRefresh,
+  verifyRefresh,
+} from "../services/token.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { env } from "../config/env.js";
@@ -24,7 +28,10 @@ export const login = asyncHandler(async (req, res) => {
   user.refreshTokens.push(refreshToken);
   await user.save();
   res.cookie(REFRESH_COOKIE, refreshToken, cookieOpts);
-  res.json({ accessToken, user: { id: user._id, email: user.email, name: user.name } });
+  res.json({
+    accessToken,
+    user: { id: user._id, email: user.email, name: user.name },
+  });
 });
 
 export const refresh = asyncHandler(async (req, res) => {
@@ -64,7 +71,9 @@ export const logout = asyncHandler(async (req, res) => {
         user.refreshTokens = user.refreshTokens.filter((t) => t !== token);
         await user.save();
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
   res.clearCookie(REFRESH_COOKIE, { ...cookieOpts, maxAge: undefined });
   res.json({ ok: true });
@@ -74,4 +83,21 @@ export const me = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
   if (!user) throw ApiError.notFound("User not found");
   res.json({ id: user._id, email: user.email, name: user.name });
+});
+
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { name, avatar, bio } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { name, avatar, bio },
+    { new: true, runValidators: true },
+  );
+  if (!user) throw ApiError.notFound("User not found");
+  res.json({
+    id: user._id,
+    email: user.email,
+    name: user.name,
+    avatar: user.avatar,
+    bio: user.bio,
+  });
 });
