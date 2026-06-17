@@ -14,6 +14,7 @@ import projectRoutes from "./routes/project.routes.js";
 import testimonialRoutes from "./routes/testimonial.routes.js";
 import metaRoutes from "./routes/meta.routes.js";
 import { sitemap } from "./controllers/sitemap.controller.js";
+import eventRoutes from "./routes/event.routes.js";
 
 export function createApp() {
   const app = express();
@@ -23,7 +24,7 @@ export function createApp() {
     cors({
       origin: env.clientOrigin,
       credentials: true,
-    })
+    }),
   );
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
@@ -31,14 +32,17 @@ export function createApp() {
   app.use("/api", apiLimiter);
 
   app.get("/sitemap.xml", sitemap);
-  app.get("/api/health", (_req, res) => res.json({ ok: true, env: env.nodeEnv }));
+  app.get("/api/health", (_req, res) =>
+    res.json({ ok: true, env: env.nodeEnv }),
+  );
   app.use("/api/auth", authRoutes);
   app.use("/api/blogs", blogRoutes);
   app.use("/api/albums", albumRoutes);
   app.use("/api/projects", projectRoutes);
   app.use("/api/testimonials", testimonialRoutes);
   app.use("/api", metaRoutes);
-
+  app.use("/api/events", eventRoutes);
+  
   app.use(notFound);
   app.use(errorHandler);
   return app;
