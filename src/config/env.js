@@ -22,4 +22,6 @@ export const env = {
     email: process.env.ADMIN_EMAIL,
     password: process.env.ADMIN_PASSWORD,
   },
+  resendApiKey: process.env.RESEND_API_KEY,
+  contactToEmail: process.env.CONTACT_TO_EMAIL,
 };

@@ -15,6 +15,7 @@ import testimonialRoutes from "./routes/testimonial.routes.js";
 import metaRoutes from "./routes/meta.routes.js";
 import { sitemap } from "./controllers/sitemap.controller.js";
 import eventRoutes from "./routes/event.routes.js";
+import settingsRoutes from "./routes/settings.routes.js";
 
 export function createApp() {
   const app = express();
@@ -42,6 +43,7 @@ export function createApp() {
   app.use("/api/testimonials", testimonialRoutes);
   app.use("/api", metaRoutes);
   app.use("/api/events", eventRoutes);
+  app.use("/api/settings", settingsRoutes);
   
   app.use(notFound);
   app.use(errorHandler);
